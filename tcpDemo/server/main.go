@@ -6,12 +6,14 @@ import (
 )
 
 func main() {
-	listen, err := net.Listen("tcp", "192.168.92.3:9999")
+	listen, err := net.Listen("tcp", "192.168.92.3:50051")
 	if err != nil {
 		fmt.Println("listen error: ", err)
 		return
 	} else {
+
 		fmt.Println("listen done")
+		fmt.Println(listen.Addr().String())
 	}
 
 	for {

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package myrpc;
+
+option go_package =".;grpc-proto";
+
+service MyServer{
+    rpc SayHi(HiRequest) returns (HiResponse){}
+}
+
+message HiRequest{
+    string clientName = 1;
+}
+message HiResponse{
+    string serverWords = 1;
+    int64 num=2;
+}
