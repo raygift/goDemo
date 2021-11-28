@@ -1,14 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 func main() {
 	// result := minSubArrayLen(11, []int{1, 2, 3, 4, 5})
-	var arg = [][]int{{2, 3}, {4, 5}, {6, 7}, {8, 9}, {1, 10}}
+	var arg = []int{0, 3, -3, 4, -1}
 	// result := arg[1:3]
-	result := merge(arg)
 
-	fmt.Printf("result %v %d %d %v\n", result, len(result), cap(result), result[0])
+	fmt.Printf("result %v %d %d\n", twoSum(arg, -1), len(twoSum(arg, -1)), cap(twoSum(arg, -1)))
 }
 
 func minSubArrayLen(target int, nums []int) int {
@@ -123,4 +125,81 @@ func fastSortMatrix(m [][]int) [][]int {
 	fastSortMatrix(m[0:left])
 	fastSortMatrix(m[right+1:])
 	return m
+}
+func twoSum(nums []int, target int) []int {
+	quickSort(nums, 0, len(nums)-1)
+	for j := 0; j < len(nums); j++ {
+		res := binarySearch(nums, target-nums[j])
+		if res != -1 && res != j {
+			return []int{j, res}
+		}
+	}
+	return nil
+}
+
+func quickSort(nums []int, left int, right int) {
+	if left >= right {
+		return
+	}
+	mid := partition(nums, left, right)
+	quickSort(nums, left, mid-1)
+	quickSort(nums, mid+1, right)
+}
+
+func partition(nums []int, left int, right int) int {
+
+	i, j := left, right
+	base := nums[left]
+	for i < j {
+		for i < j && nums[j] >= base {
+			j--
+		}
+		if i == j {
+			break
+		}
+		for i < j && nums[i] <= base {
+			i++
+		}
+		if i == j {
+			break
+		}
+		nums[i], nums[j] = nums[j], nums[i]
+	}
+	// i==j
+	if nums[j] > base {
+		j--
+	}
+	nums[j], nums[left] = nums[left], nums[j]
+	log.Printf("partition %v %d\n", nums, j)
+
+	return j
+}
+
+func binarySearch(nums []int, target int) int {
+	if len(nums) == 1 {
+		if nums[0] == target {
+			return 0
+		} else {
+			return -1
+		}
+	}
+	if len(nums) == 0 {
+		return -1
+	}
+	left, right := 0, len(nums)-1
+	for left < right {
+		mid := (right-left)/2 + left
+		if nums[mid] == target {
+			return mid
+		} else if nums[mid] > target {
+			right = mid - 1
+		} else {
+			left = mid + 1
+		}
+	}
+	if left == right && nums[left] == target {
+		return left
+	} else {
+		return -1
+	}
 }
